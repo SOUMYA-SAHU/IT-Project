@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .navbar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        h1 {
+            text-align: left;
+            margin-bottom: 20px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .opted-course {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div></div>
+        <div>
+            {% if user.is_authenticated %}
+                <span style="margin-right:10px">Hi, {{ user.details.name }}</span>
+                <a href="{% url 'signin_student' %}">Logout</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Available Courses</h1>
+        <form method="post" action="{% url 'opt_course' %}">
+            {% csrf_token %}
+            {% for course in available_courses %}
+                <input type="checkbox" name="course_id" value="{{ course.id }}"> {{ course.course_name }} - {{ course.course_code }}<br>
+            {% endfor %}
+            <button type="submit">Opt Courses</button>
+        </form>
+
+        <hr>
+
+        <h1>Opted Courses</h1>
+        <div class="opted-courses">
+            <ul>
+                {% for course in opted_courses %}
+                    <li>{{ course.course_code.course_name }} - {{ course.course_code.course_code}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

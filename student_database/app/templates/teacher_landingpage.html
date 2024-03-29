@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Navbar styles */
+        .navbar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align : right;
+        }
+
+        .navbar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        /* Cards container styles */
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Card styles */
+        .card {
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            width: 200px;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <!-- Replace the URL with the actual profile picture URL -->
+        <img src="static/img/student.jpg" alt="Profile Picture">
+        <!-- Replace "{{ user.name }}" with the actual user's name -->
+        <span>Hi, {{ username }}</span>
+    </div>
+
+    <div class="card-container">
+        <div class="card" onclick="location.href='{% url 'teacher_addcourse' %}'">
+            <h3>Course</h3>
+        </div>
+        <div class="card" onclick="location.href='{% url 'student_detail' %}'">
+            <h3>Student Details</h3>
+    
+        </div>
+        <div class="card" onclick="location.href='{% url 'teacherlanding_page' %}'">
+            <h3>Card 3</h3>
+            <p>This is card 3 content.</p>
+        </div>
+    </div>
+</body>
+</html>

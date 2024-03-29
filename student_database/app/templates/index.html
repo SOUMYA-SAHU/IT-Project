@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page with Cards and Navbar</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #eef3ff;
+  }
+  
+  .navbar {
+    background-color: #ffffff;
+    color: white;
+    padding: 10px;
+    text-align: right;
+  }
+  
+  .navbar a {
+    color: black;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .card {
+    width: 300px;
+    height: 250px;
+    background-color: #d8dcfb;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 20px;
+    margin-top: 80px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    /* Other styles for your card */
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover {
+    transform: scale(1.1); /* You can adjust the scale factor as per your preference */
+  }
+  
+  .card img {
+    width: 300px; /* Adjust image size as needed */
+    border-radius: 30px; /* To make it circular */
+    margin-bottom: 20px;
+  }
+  
+  .card .role {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "sans-serif";
+    font-size: 25px;
+  }
+</style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="#">About Us</a>
+    <a href="#">Contact</a>
+  </div>
+  
+  <div class="container">
+    <a href="signin_student"> <!-- Change the URL to your sign-in page -->
+      <div class="card">
+        <img src="static/img/student.jpg"  alt="Student Image">
+        <div class="role">Student</div>
+      </div>
+    </a>
+    <a href="signin_teacher"> <!-- Change the URL to your sign-in page -->
+    <div class="card">
+      <img src="static/img/teacher.jpg" alt="Admin Image">
+      <div class="role">Teacher</div>
+    </div>
+</a>
+  </div>
+</body>
+</html>

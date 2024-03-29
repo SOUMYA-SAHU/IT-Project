@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Detail</title>
+</head>
+<body>
+    <h1>Student Details</h1>
+    {% if student %}
+    <table>
+        <tr>
+            <th>Registration Number</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Contact Number</th>
+            <th>Department</th>
+        </tr>
+        <tr>
+            <td>{{ student.regno }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.gender }}</td>
+            <td>{{ student.contact_number }}</td>
+            <td>{{ student.branch }}</td>
+        </tr>
+    </table>
+    {% endif %}
+
+    {% if student_courses %}
+    <h2>Enrolled Courses</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Course Name</th>
+                <th>Attendance (%)</th>
+                <th>Marks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in student_courses %}
+            <tr>
+                <td>{{ course.regno.name }}</td>
+                <td>{{ course.course_code.course_name }}</td>
+                <td>{{ course.attendance }}</td>
+                <td>{{ course.course_marks }}</td>
+                <td>
+                    <form method="post" action="{% url 'update_attendance' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="course_id" value="{{ course.id }}">
+                        <input type="number" name="attendance" value="{{ course.attendance }}">
+                        <button type="submit">Update Attendance</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="{% url 'update_marks' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="course_id" value="{{ course.id }}">
+                        <input type="number" name="marks" value="{{ course.course_marks }}">
+                        <button type="submit">Update Marks</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</body>
+</html>
