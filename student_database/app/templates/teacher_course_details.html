@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Course Details</title>
+    <style>
+        /* Navbar styles */
+        .navbar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+        }
+
+        .navbar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        /* Container styles */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <!-- Replace the URL with the actual profile picture URL -->
+        <img src="static/img/student.jpg" alt="Profile Picture">
+        <!-- Replace "{{ user.name }}" with the actual user's name -->
+        <span>Hi, {{ context.username }}</span>
+    </div>
+
+    <div class="container">
+        <h1>Teacher Course Details</h1>
+        {% if course_details %}
+            <table>
+                <tr>
+                    <th>Course Name</th>
+                    <th>Course Code</th>
+                    <th>Department</th>
+                    <th>Sections</th>
+                    <th>Students Count</th>
+                </tr>
+                {% for course_detail in course_details %}
+                    <tr>
+                        <td>{{ course_detail.course_name }}</td>
+                        <td>{{ course_detail.course_code }}</td>
+                        <td>{{ course_detail.dept }}</td>
+                        <td>
+                            {% if course_detail.sections %}
+                                {% for section_detail in course_detail.sections %}
+                                    {{ section_detail.section }}
+                                {% endfor %}
+                            {% else %}
+                                No sections found
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if course_detail.sections %}
+                                {% for section_detail in course_detail.sections %}
+                                    {{ section_detail.students_count }}
+                                {% endfor %}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No courses found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Details,Course
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 
 def index(request):
     return render(request,'index.html')
@@ -72,12 +74,37 @@ def signup(request):
 @login_required
 def studentlanding_page(request):
     # Get the logged-in user's profile
-    profile = Details.objects.get(user=request.user)
-    context = {
-        'username': profile.name,
-        # 'profile_picture': profile.profile_picture.url if profile.profile_picture else None
-    }
-    return render(request, 'student_landingpage.html', context)
+    # profile = Details.objects.get(user=request.user)
+    # context = {
+    #     'username': profile.name,
+    #     # 'profile_picture': profile.profile_picture.url if profile.profile_picture else None
+    # }
+    # return render(request, 'student_landingpage.html', context)
+    user = request.user
+    try:
+        details = Details.objects.get(user=user)
+    except Details.DoesNotExist:
+        # Handle the case where Details record does not exist for the user
+        return HttpResponse("Details record does not exist for this user.")
+    announcements = Announcement.objects.filter(section__isnull=False)  # Fetch announcements with a specific section
+    teacher = Teacher.objects.filter(user=user).first()
+    
+    if teacher:
+        announcements = announcements.filter(section=teacher.section, regno__course_code=teacher.course_code)
+    else:
+        student_sections = StudentSection.objects.filter(regno__user=user)
+        if student_sections.exists():
+            sections = [section.section for section in student_sections]
+            course_codes = [section.regno.course_code for section in student_sections]
+            announcements = announcements.filter(section__in=sections, regno__course_code__in=course_codes)
+        else:
+            # If the user is not a teacher and not enrolled in any sections, return only global announcements
+            announcements = Announcement.objects.filter(section__isnull=True)
+
+    return render(request, 'student_landingpage.html', {'announcements': announcements, 'username': details.name, 'details': details})
+
+    # Continue with the view logic using the details object
+    # return render(request, 'student_landingpage.html', {'username': details.name, 'details': details})
 
 @login_required
 def teacherlanding_page(request):
@@ -204,3 +231,85 @@ def update_marks(request):
                 pass  # Invalid marks value
 
     return redirect('student_detail')
+
+from .models import Teacher, Course, StudentSection, Announcement
+
+
+@login_required
+def teacher_course_details(request):
+    try:
+        # Get the teacher associated with the current user
+        teacher = Teacher.objects.get(user=request.user)
+        profile = Details.objects.get(user=request.user)
+        context = {
+            'username': profile.name,
+        }
+        # Fetch courses assigned to the teacher based on the department
+        courses = Course.objects.filter(dept=teacher.regno.branch)
+        
+        course_details = []
+        for course in courses:
+            # Get student courses for each course
+            student_courses = StudentCourse.objects.filter(course_code=course)
+            sections = []
+            for student_course in student_courses:
+                # Get sections for each student course
+                section = StudentSection.objects.filter(regno=student_course.regno, section=teacher.section).first()
+                if section:
+                    sections.append(section.section)
+            # Count students enrolled in each section
+            section_details = []
+            for section in sections:
+                students_count = StudentSection.objects.filter(section=section).count()
+                section_details.append({'section': section, 'students_count': students_count})
+            course_details.append({'course_name': course.course_name, 'course_code': course.course_code, 'dept': course.dept, 'sections': section_details})
+    except Teacher.DoesNotExist:
+        # Handle the case where the teacher doesn't exist
+        course_details = []
+        
+
+    return render(request, 'teacher_course_details.html', {'course_details': course_details, 'context': context})
+
+
+def create_announcement(request):
+    profile = Details.objects.get(user=request.user)
+    context = {
+            'username': profile.name,
+        }
+    if request.method == 'POST':
+        message = request.POST.get('message')
+        section = request.POST.get('section')
+        course_code = request.POST.get('course_code')
+        global_announcement = request.POST.get('global_announcement')
+        
+        if global_announcement:
+            # Create a global announcement
+            Announcement.objects.create(regno=request.user.details, message=message)
+        elif course_code and section:
+            # Create an announcement for a specific course code and section
+            Announcement.objects.create(regno=request.user.details, message=message, section=section)
+            
+    return render(request, 'create_announcement.html',context)
+
+
+# def view_specific_announcements(request):
+#     user = request.user
+#     announcements = Announcement.objects.filter(section__isnull=False)  # Fetch announcements with a specific section
+#     teacher = Teacher.objects.filter(user=user).first()
+#     if teacher:
+#         announcements = announcements.filter(section=teacher.section, regno__course_code=teacher.course_code)
+#     else:
+#         student_sections = StudentSection.objects.filter(regno__user=user)
+#         if student_sections.exists():
+#             sections = [section.section for section in student_sections]
+#             course_codes = [section.regno.course_code for section in student_sections]
+#             announcements = announcements.filter(section__in=sections, regno__course_code__in=course_codes)
+#         else:
+#             # If the user is not a teacher and not enrolled in any sections, return an empty queryset
+#             announcements = Announcement.objects.none()
+    
+#     return render(request, 'student_landingpage.html', {'announcements': announcements})
+
+# def view_global_announcements(request):
+#     announcements = Announcement.objects.filter(section__isnull=True)  # Fetch global announcements
+#     return render(request, 'student_landingpage.html', {'announcements': announcements})

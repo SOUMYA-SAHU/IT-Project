@@ -15,5 +15,9 @@ urlpatterns = [
     path('student_detail',views.student_detail,name='student_detail'),
     path('update_attendance',views.update_attendance,name='update_attendance'),
     path('update_marks',views.update_marks,name='update_marks'),
+    path('teacher_course_details',views.teacher_course_details,name='teacher_course_details'),
+    path('create_announcement',views.create_announcement,name='create_announcement'),
+    # path('view_specific_announcements',views.view_specific_announcements,name='view_specific_announcements'),
+    # path('view_global_announcements',views.view_global_announcements,name='view_global_announcements'),
     
 ]

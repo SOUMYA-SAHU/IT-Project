@@ -11,9 +11,8 @@ class Details(models.Model):
     branch = models.CharField(max_length=100)
     
     def __str__(self):
-        return self.name
+        return self.regno
     
-from django.db import models
 
 class Course(models.Model):
     course_name = models.CharField(max_length=100)
@@ -32,3 +31,25 @@ class StudentCourse(models.Model):
     def __str__(self):
         return f"Reg No: {self.regno}, Course Code: {self.course_code}"
     
+class Teacher(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    regno = models.ForeignKey('Details', on_delete=models.CASCADE)
+    course_code = models.ForeignKey('Course', on_delete=models.CASCADE)
+    section = models.CharField(max_length=10)  # Assuming section is a string identifier
+
+    def __str__(self):
+        return f"Teacher: {self.user.username}, Course: {self.course_code.course_name}, Section: {self.section}"
+
+class Announcement(models.Model):
+    regno = models.ForeignKey('Details', on_delete=models.CASCADE)
+    message = models.TextField()
+    section = models.CharField(max_length=50, blank=True, null=True)
+    def __str__(self):
+        return f"Announcement from {self.regno.user.username}"
+
+class StudentSection(models.Model):
+    regno = models.ForeignKey('Details', on_delete=models.CASCADE)
+    section = models.CharField(max_length=10)  # Assuming section is a string identifier
+
+    def __str__(self):
+        return f"Student: {self.regno.user.username}, Section: {self.section}"

@@ -14,7 +14,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            text-align : right;
+            text-align: right;
         }
 
         .navbar img {
@@ -40,10 +40,65 @@
             transition: transform 0.3s ease;
             cursor: pointer;
             width: 200px;
+            text-align:center;
         }
 
         .card:hover {
             transform: scale(1.05);
+        }
+
+        /* Announcement corner styles */
+        .announcement-corner {
+            position: fixed;
+            bottom: 0;
+            right: 0px;
+            width: 1240px;
+            max-height: 130px;
+            overflow-y: auto;
+            background-color: #e6f7ff; /* Light blue background color */
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .announcement-corner h2 {
+            margin-top: 5px;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .announcement-card {
+            margin-bottom: 20px;
+            background-color: #fff; /* White background color for each announcement */
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .announcement-card:hover {
+            transform: scale(1.02);
+        }
+
+        .announcement-card h3 {
+            color: #007bff; /* Blue color for announcement heading */
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .announcement-card p {
+            color: #666; /* Dark gray color for teacher name and department */
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            margin-top: 0;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -51,23 +106,36 @@
     <div class="navbar">
         <!-- Replace the URL with the actual profile picture URL -->
         <img src="static/img/student.jpg" alt="Profile Picture">
-        <!-- Replace "{{ user.name }}" with the actual user's name -->
+        <!-- Replace "{{ username }}" with the actual user's name -->
         <span>Hi, {{ username }}</span>
     </div>
 
     <div class="card-container">
         <div class="card" onclick="location.href='{% url 'course_dashboard' %}'">
             <h3 style="text-align: center">Courses</h3>
-            
         </div>
         <div class="card" onclick="location.href='{% url 'studentlanding_page' %}'">
-            <h3>Card 2</h3>
-            <p>This is card 2 content.</p>
+            <h3>Attendance</h3>
         </div>
         <div class="card" onclick="location.href='{% url 'studentlanding_page' %}'">
-            <h3>Card 3</h3>
-            <p>This is card 3 content.</p>
+            <h3>Gpa</h3>
         </div>
+    </div>
+
+    <div class="announcement-corner">
+        <h2>Announcements</h2>
+        {% if announcements %}
+            {% for announcement in announcements %}
+                <div class="announcement-card">
+                    <p><span class="teacher">Teacher:</span> {{ announcement.regno.name }}</p>
+                    <p><span class="teacher">Department:</span> {{ announcement.regno.branch }}</p>
+                    <h3>{{ announcement.message }}</h3>
+                    <!-- Add any other details you want to display -->
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No announcements available.</p>
+        {% endif %}
     </div>
 </body>
 </html>

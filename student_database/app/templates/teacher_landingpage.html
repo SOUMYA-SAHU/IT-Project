@@ -56,16 +56,15 @@
     </div>
 
     <div class="card-container">
-        <div class="card" onclick="location.href='{% url 'teacher_addcourse' %}'">
-            <h3>Course</h3>
+        <div class="card" onclick="location.href='{% url 'teacher_course_details' %}'">
+            <h3>Course Details</h3>
         </div>
         <div class="card" onclick="location.href='{% url 'student_detail' %}'">
             <h3>Student Details</h3>
     
         </div>
-        <div class="card" onclick="location.href='{% url 'teacherlanding_page' %}'">
-            <h3>Card 3</h3>
-            <p>This is card 3 content.</p>
+        <div class="card" onclick="location.href='{% url 'create_announcement' %}'">
+            <h3>Create Announcement</h3>
         </div>
     </div>
 </body>
